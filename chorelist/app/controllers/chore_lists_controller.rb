@@ -5,6 +5,7 @@ class ChoreListsController < ApplicationController
 
   def show
     @chore_list = ChoreList.find(params[:id])
+    @chores_by_person = @chore_list.chores.group_by { |chore| chore.assigned_to }
   end
 
   def new

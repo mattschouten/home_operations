@@ -1,9 +1,13 @@
 <h1>Chore List <%= @chore_list.date %></h1>
 
-<% @chore_list.chores.each do |chore| %>
-    <ul>
-        <li><%= chore.assigned_to %>: <%= chore.name %></li>
-    </ul>
+<% @chores_by_person.keys.each do |assigned_to| %>
+    <p><%= assigned_to %>
+    <% @chores_by_person[assigned_to].each do |chore| %>
+        <ul>
+            <li><%= chore.name %></li>
+        </ul>
+    <% end %>
+    </p>
 <% end %>
 
 <h2>Add a chore:</h2>
