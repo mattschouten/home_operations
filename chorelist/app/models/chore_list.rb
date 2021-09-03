@@ -1,0 +1,2 @@
+class ChoreList < ApplicationRecord
+end
