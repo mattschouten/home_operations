@@ -1,0 +1,16 @@
+<h1>Chore List <%= @chore_list.date %></h1>
+
+<% @chore_list.chores.each do |chore| %>
+    <ul>
+        <li><%= chore.assigned_to %>: <%= chore.name %></li>
+    </ul>
+<% end %>
+
+<h2>Add a chore:</h2>
+<%= form_with model: [ @chore_list, @chore_list.chores.build ] do |form| %>
+    <p><%= form.label :name %><%= form.text_field :name %></p>
+    <p><%= form.label :assigned_to %><%= form.text_field :assigned_to %></p>
+    <p><%= form.submit %></p>
+<% end %>
+
+<%= link_to "Home", root_path %>

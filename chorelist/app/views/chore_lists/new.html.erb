@@ -1,0 +1,14 @@
+<h1>Create Chore List</h1>
+
+<%= form_with model: @chore_list do |form| %>
+    <div>
+        <%= form.label :date %>
+        <%= form.date_field :date %>
+        <% @chore_list.errors.full_messages_for(:date).each do |message| %>
+            <div><%= message %>
+        <% end %>
+    </div>
+    <div>
+        <%= form.submit %>
+    </div>
+<% end %>

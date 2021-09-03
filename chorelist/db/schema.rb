@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_09_03_115822) do
+ActiveRecord::Schema.define(version: 2021_09_03_140032) do
 
   create_table "chore_lists", force: :cascade do |t|
     t.date "date"
@@ -18,4 +18,15 @@ ActiveRecord::Schema.define(version: 2021_09_03_115822) do
     t.datetime "updated_at", precision: 6, null: false
   end
 
+  create_table "chores", force: :cascade do |t|
+    t.string "name"
+    t.string "assigned_to"
+    t.boolean "is_done"
+    t.integer "chore_list_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["chore_list_id"], name: "index_chores_on_chore_list_id"
+  end
+
+  add_foreign_key "chores", "chore_lists"
 end

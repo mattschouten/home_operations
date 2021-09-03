@@ -1,2 +1,9 @@
-<h1>ChoreLists#index</h1>
-<p>Find me in app/views/chore_lists/index.html.erb</p>
+<h1>Chore Lists</h1>
+
+<%= link_to "New Chore List", new_chore_list_path %>
+
+<ul>
+    <% @chore_lists.each do |chore_list| %>
+        <li><%= link_to chore_list.date, chore_list %></li>
+    <% end %>
+</ul>
