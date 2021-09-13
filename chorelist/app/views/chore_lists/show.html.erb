@@ -1,12 +1,14 @@
-<h1>Chore List <%= @chore_list.date %></h1>
+<%= @chore_list.date.strftime("%A, %B %d, %Y") %>
+
+<h2>Chores!</h2>
 
 <% @chores_by_person.keys.each do |assigned_to| %>
     <p><%= assigned_to %>
-    <% @chores_by_person[assigned_to].each do |chore| %>
         <ul>
+        <% @chores_by_person[assigned_to].each do |chore| %>
             <li><%= chore.name %></li>
+        <% end %>
         </ul>
-    <% end %>
     </p>
 <% end %>
 
