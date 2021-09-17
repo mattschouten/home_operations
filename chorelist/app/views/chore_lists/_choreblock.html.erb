@@ -1,0 +1,14 @@
+<div class="choreblock">
+    <p class="blocktitle"><%= assigned_to %>
+        <ul>
+        <% chores_by_person[assigned_to].each do |chore| %>
+            <%= form_with model: [@chore_list, chore], local: false do |form| %>
+                <li>
+                    <%= check_box_tag "completed[#{chore.id}]", chore.id, chore.is_done, :onclick => "this.form.submit()" %>
+                    <%= label_tag "completed[#{chore.id}]", chore.name %>
+                </li>
+            <% end %>
+        <% end %>
+        </ul>
+    </p>
+</div>

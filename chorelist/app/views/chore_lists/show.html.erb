@@ -3,27 +3,10 @@
 <h2>Chores!</h2>
 
 <% @chores_by_person.keys.each do |assigned_to| %>
-    <div class="choreblock">
-        <p class="blocktitle"><%= assigned_to %>
-            <ul>
-            <% @chores_by_person[assigned_to].each do |chore| %>
-                <%= form_with model: [@chore_list, chore], local: false do |form| %>
-                    <li>
-                        <%= check_box_tag "completed[#{chore.id}]", chore.id, chore.is_done, :onclick => "this.form.submit()" %>
-                        <%= label_tag "completed[#{chore.id}]", chore.name %>
-                    </li>
-                <% end %>
-            <% end %>
-            </ul>
-        </p>
-    </div>
+    <%= render 'choreblock', assigned_to: assigned_to, chores_by_person: @chores_by_person %>
 <% end %>
 
 <h2>Add a chore:</h2>
-<%= form_with model: [ @chore_list, @chore_list.chores.build ] do |form| %>
-    <p><%= form.label :name %><%= form.text_field :name %></p>
-    <p><%= form.label :assigned_to %><%= form.text_field :assigned_to %></p>
-    <p><%= form.submit %></p>
-<% end %>
+<%= render 'chores/choreform', chore_list: @chore_list %>
 
 <%= link_to "Home", root_path %>
