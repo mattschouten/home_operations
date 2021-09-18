@@ -6,7 +6,9 @@
     <%= render 'choreblock', assigned_to: assigned_to, chores_by_person: @chores_by_person %>
 <% end %>
 
+<div id="addChore">
 <h2>Add a chore:</h2>
 <%= render 'chores/choreform', chore_list: @chore_list %>
+</div>
 
 <%= link_to "Home", root_path %>

@@ -14,3 +14,10 @@
         list-style-type: none;
     }
 }
+
+@media print {
+
+    #addChore {
+        display:none
+    }
+}
