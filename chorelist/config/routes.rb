@@ -1,5 +1,7 @@
 Rails.application.routes.draw do
-  root "chore_lists#index"
+  root "pages#index"
+
+  #root "chore_lists#index"
 
   resources :chore_lists do
     resources :chores

@@ -1,0 +1,15 @@
+<h1>The Chore List</h1>
+
+<p>
+    <% if current_user %>
+        Hello <%= current_user %>, you can go to your chore lists.
+        <%= link_to "Chore Lists", chore_lists_path %>
+    <% else %>
+        Hello!  You can 
+        <%= link_to "log in", new_user_sessions_path %>
+        or
+        <%= link_to "register", new_user_path %>
+        !
+        <%= yield %>
+    <% end %>
+</p>

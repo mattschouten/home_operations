@@ -1,5 +1,11 @@
 class User < ApplicationRecord
-    acts_as_authentic
+    acts_as_authentic do |c|
+        c.crypto_provider = ::Authlogic::CryptoProviders::SCrypt
+    end
+
+    def self.find_by_login_or_email(login)
+        find_by_login(login) || find_by_email(login)
+    end
 
     # Validate email, login, and password as you see fit.
     #
@@ -18,10 +24,6 @@ class User < ApplicationRecord
       }
 
     validates :login,
-      format: {
-        with: /\A[a-z0-9]+\z/,
-        message: "should use only letters and numbers."
-      },
       length: { within: 3..100 },
       uniqueness: {
         case_sensitive: false,

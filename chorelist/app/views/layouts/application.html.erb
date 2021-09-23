@@ -12,7 +12,8 @@
 
   <body>
     <% if current_user %>
-      Current User: <%= current_user %>
+      Current User: <%= current_user.login %>
+      <%= yield %>
     <% else %>
       NO CURRENT USER
       <%= yield %>

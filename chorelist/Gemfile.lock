@@ -85,6 +85,9 @@ GEM
     crass (1.0.6)
     erubi (1.10.0)
     ffi (1.15.4)
+    ffi-compiler (1.0.1)
+      ffi (>= 1.0.0)
+      rake
     globalid (0.5.2)
       activesupport (>= 5.0)
     i18n (1.8.10)
@@ -162,6 +165,8 @@ GEM
       sprockets (> 3.0)
       sprockets-rails
       tilt
+    scrypt (3.0.7)
+      ffi-compiler (>= 1.0, < 2.0)
     selenium-webdriver (3.142.7)
       childprocess (>= 0.5, < 4.0)
       rubyzip (>= 1.2.2)
@@ -217,6 +222,7 @@ DEPENDENCIES
   rack-mini-profiler (~> 2.0)
   rails (~> 6.1.4, >= 6.1.4.1)
   sass-rails (>= 6)
+  scrypt (~> 3.0)
   selenium-webdriver
   spring
   sqlite3 (~> 1.4)
