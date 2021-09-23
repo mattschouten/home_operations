@@ -16,8 +16,11 @@
 }
 
 @media print {
+    .headerbar, .footer {
+        display: none;
+    }
 
     #addChore {
-        display:none
+        display: none;
     }
 }

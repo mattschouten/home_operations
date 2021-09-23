@@ -12,7 +12,9 @@
 
   <body>
     <% if current_user %>
-      Current User: <%= current_user.login %> (<%= link_to "Log Out", sign_out_path, method: :delete %>)<br />
+      <div class="headerbar">
+        Current User: <%= current_user.login %> (<%= link_to "Log Out", sign_out_path, method: :delete %>)<br />
+      </div>
       <%= yield %>
     <% else %>
       NO CURRENT USER
