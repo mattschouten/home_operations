@@ -1,5 +1,5 @@
 <%= form_with model: [ chore_list, chore_list.chores.build ] do |form| %>
-    <p><%= form.label :name %><%= form.text_field :name, autofocus: true %></p>
-    <p><%= form.label :assigned_to %><%= form.text_field :assigned_to %></p>
+    <p><%= form.label :name, "Chore" %> <%= form.text_field :name, autofocus: true %></p>
+    <p><%= form.label :assigned_to %> <%= form.text_field :assigned_to, value: default_assigned_to %></p>
     <p><%= form.submit %></p>
 <% end %>
