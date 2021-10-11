@@ -2,6 +2,9 @@ class ChoresController < ApplicationController
     def create
         @chore_list = ChoreList.find(params[:chore_list_id])
         @chore = @chore_list.chores.create(chore_params)
+
+        session[:last_assigned_to] = @chore.assigned_to
+
         redirect_to chore_list_path(@chore_list)
     end
 

@@ -6,6 +6,11 @@ class ChoreListsController < ApplicationController
   def show
     @chore_list = ChoreList.find(params[:id])
     @chores_by_person = @chore_list.chores.group_by { |chore| chore.assigned_to }
+
+    if session.key? :last_assigned_to
+      @default_assigned_to = session[:last_assigned_to]
+      session.delete :last_assigned_to
+    end
   end
 
   def new
@@ -18,7 +23,7 @@ class ChoreListsController < ApplicationController
     if @chore_list.save
       redirect_to @chore_list
     else
-      render :new  
+      render :new
     end
   end
 
