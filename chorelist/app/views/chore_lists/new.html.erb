@@ -3,7 +3,7 @@
 <%= form_with model: @chore_list do |form| %>
     <div>
         <%= form.label :date %>
-        <%= form.date_field :date %>
+        <%= form.date_field :date, value: Date.today %>
         <% @chore_list.errors.full_messages_for(:date).each do |message| %>
             <div><%= message %>
         <% end %>
