@@ -5,7 +5,7 @@ class ChoreListsController < ApplicationController
 
   def show
     @chore_list = ChoreList.find(params[:id])
-    @chores_by_person = @chore_list.chores.group_by { |chore| chore.assigned_to }
+    @chores_by_person = chores_by_person
 
     if session.key? :last_assigned_to
       @default_assigned_to = session[:last_assigned_to]
@@ -27,8 +27,19 @@ class ChoreListsController < ApplicationController
     end
   end
 
+  def today
+    @chore_list = ChoreList.find_by(date: Date.today)
+    @chores_by_person = chores_by_person
+
+    render :show
+  end
+
   private
     def chore_list_params
       params.require(:chore_list).permit(:date)
+    end
+
+    def chores_by_person
+      @chore_list.chores.group_by { |chore| chore.assigned_to }
     end
 end

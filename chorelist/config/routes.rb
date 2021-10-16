@@ -6,6 +6,7 @@ Rails.application.routes.draw do
   resources :chore_lists do
     resources :chores
   end
+  get '/today', to: "chore_lists#today", as: :today
 
   resources :users #, only [:new, :create]
   resource :user_sessions #, only [:create, :destroy]
