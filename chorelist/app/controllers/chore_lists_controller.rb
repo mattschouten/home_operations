@@ -29,9 +29,13 @@ class ChoreListsController < ApplicationController
 
   def today
     @chore_list = ChoreList.find_by(date: Date.today)
-    @chores_by_person = chores_by_person
 
-    render :show
+    if @chore_list.nil?
+      redirect_to chore_lists_path
+    else
+      @chores_by_person = chores_by_person
+      render :show
+    end
   end
 
   private
