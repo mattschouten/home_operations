@@ -27,6 +27,17 @@ class ChoreListsController < ApplicationController
     end
   end
 
+  def carryover
+    source_list = ChoreList.find(params[:id])
+
+    @chore_list = ChoreList.new_carry_over(source_list)
+    if @chore_list.save
+      redirect_to @chore_list
+    else
+      render :new
+    end
+  end
+
   def today
     @chore_list = ChoreList.find_by(date: Date.today)
 
