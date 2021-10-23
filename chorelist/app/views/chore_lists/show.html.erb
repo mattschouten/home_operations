@@ -13,7 +13,7 @@
 </div>
 
 <div id="carryOver">
-    <%= form_with url: carryover_chore_list_path, method: 'post', model: [ @chore_list ] do |form| %>
+    <%= form_with url: carryover_chore_list_path(@chore_list), method: 'post' do |form| %>
         <p><%= form.submit "Carry over to tomorrow" %></p>
     <% end %>
 </div>
