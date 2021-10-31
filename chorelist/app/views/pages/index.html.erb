@@ -2,13 +2,13 @@
 
 <p>
     <% if current_user %>
-        Hello <%= current_user %>, you can go to your chore lists.
+        Hello <%= current_user.email %>, you can go to your chore lists.
         <%= link_to "Chore Lists", chore_lists_path %>
     <% else %>
-        Hello!  You can 
-        <%= link_to "log in", new_user_sessions_path %>
+        Hello!  You can
+        <%= link_to "log in", new_user_session_path %>
         or
-        <%= link_to "register", new_user_path %>
+        <%= link_to "register", new_user_registration_path %>
         !
         <%= yield %>
     <% end %>

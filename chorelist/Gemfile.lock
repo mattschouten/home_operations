@@ -62,11 +62,7 @@ GEM
       zeitwerk (~> 2.3)
     addressable (2.8.0)
       public_suffix (>= 2.0.2, < 5.0)
-    authlogic (6.4.1)
-      activemodel (>= 5.2, < 6.2)
-      activerecord (>= 5.2, < 6.2)
-      activesupport (>= 5.2, < 6.2)
-      request_store (~> 1.0)
+    bcrypt (3.1.16)
     bindex (0.8.1)
     bootsnap (1.8.1)
       msgpack (~> 1.0)
@@ -83,12 +79,15 @@ GEM
     childprocess (3.0.0)
     concurrent-ruby (1.1.9)
     crass (1.0.6)
+    devise (4.8.0)
+      bcrypt (~> 3.0)
+      orm_adapter (~> 0.1)
+      railties (>= 4.1.0)
+      responders
+      warden (~> 1.2.3)
     diff-lcs (1.4.4)
     erubi (1.10.0)
     ffi (1.15.4)
-    ffi-compiler (1.0.1)
-      ffi (>= 1.0.0)
-      rake
     globalid (0.5.2)
       activesupport (>= 5.0)
     i18n (1.8.10)
@@ -111,6 +110,7 @@ GEM
     nio4r (2.5.8)
     nokogiri (1.12.4-x86_64-darwin)
       racc (~> 1.4)
+    orm_adapter (0.5.0)
     public_suffix (4.0.6)
     puma (5.4.0)
       nio4r (~> 2.0)
@@ -153,8 +153,9 @@ GEM
     rb-inotify (0.10.1)
       ffi (~> 1.0)
     regexp_parser (2.1.1)
-    request_store (1.5.0)
-      rack (>= 1.4)
+    responders (3.0.1)
+      actionpack (>= 5.0)
+      railties (>= 5.0)
     rexml (3.2.5)
     rspec-core (3.10.1)
       rspec-support (~> 3.10.0)
@@ -184,8 +185,6 @@ GEM
       sprockets (> 3.0)
       sprockets-rails
       tilt
-    scrypt (3.0.7)
-      ffi-compiler (>= 1.0, < 2.0)
     selenium-webdriver (3.142.7)
       childprocess (>= 0.5, < 4.0)
       rubyzip (>= 1.2.2)
@@ -206,6 +205,8 @@ GEM
     turbolinks-source (5.2.0)
     tzinfo (2.0.4)
       concurrent-ruby (~> 1.0)
+    warden (1.2.9)
+      rack (>= 2.0.9)
     web-console (4.1.0)
       actionview (>= 6.0.0)
       activemodel (>= 6.0.0)
@@ -231,10 +232,11 @@ PLATFORMS
   x86_64-darwin-20
 
 DEPENDENCIES
-  authlogic
+  bcrypt
   bootsnap (>= 1.4.4)
   byebug
   capybara (>= 3.26)
+  devise
   jbuilder (~> 2.7)
   listen (~> 3.3)
   puma (~> 5.0)
@@ -243,7 +245,6 @@ DEPENDENCIES
   rexml (~> 3.0)
   rspec-rails (~> 5.0)
   sass-rails (>= 6)
-  scrypt (~> 3.0)
   selenium-webdriver
   spring
   sqlite3 (~> 1.4)
