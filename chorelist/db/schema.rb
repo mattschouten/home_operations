@@ -10,12 +10,14 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_10_31_112747) do
+ActiveRecord::Schema.define(version: 2021_11_07_122449) do
 
   create_table "chore_lists", force: :cascade do |t|
     t.date "date"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.integer "family_id", null: false
+    t.index ["family_id"], name: "index_chore_lists_on_family_id"
   end
 
   create_table "chores", force: :cascade do |t|
@@ -26,6 +28,12 @@ ActiveRecord::Schema.define(version: 2021_10_31_112747) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["chore_list_id"], name: "index_chores_on_chore_list_id"
+  end
+
+  create_table "families", force: :cascade do |t|
+    t.string "name"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
   end
 
   create_table "users", force: :cascade do |t|
@@ -40,5 +48,6 @@ ActiveRecord::Schema.define(version: 2021_10_31_112747) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
+  add_foreign_key "chore_lists", "families"
   add_foreign_key "chores", "chore_lists"
 end

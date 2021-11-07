@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  resources :families
   root "pages#index"
 
   resources :chore_lists do
