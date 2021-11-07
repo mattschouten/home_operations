@@ -10,13 +10,13 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_11_07_122449) do
+ActiveRecord::Schema.define(version: 2021_11_07_171332) do
 
   create_table "chore_lists", force: :cascade do |t|
     t.date "date"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.integer "family_id", null: false
+    t.integer "family_id"
     t.index ["family_id"], name: "index_chore_lists_on_family_id"
   end
 
@@ -44,10 +44,13 @@ ActiveRecord::Schema.define(version: 2021_11_07_122449) do
     t.datetime "remember_created_at"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.integer "family_id"
     t.index ["email"], name: "index_users_on_email", unique: true
+    t.index ["family_id"], name: "index_users_on_family_id"
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
   add_foreign_key "chore_lists", "families"
   add_foreign_key "chores", "chore_lists"
+  add_foreign_key "users", "families"
 end
