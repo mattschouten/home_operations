@@ -22,6 +22,8 @@ class ChoreListsController < ApplicationController
   end
 
   def create
+    return head(:forbidden) unless current_user&.role_owner?
+
     @chore_list = ChoreList.new(chore_list_params.merge({ family: current_user.family }))
 
     if @chore_list.save
@@ -32,6 +34,8 @@ class ChoreListsController < ApplicationController
   end
 
   def carryover
+    redirect_to chore_list_path(id: params[:id]) and return unless current_user&.role_owner?
+
     source_list = ChoreList.find(params[:id])
     return head(:forbidden) unless current_user&.family == source_list&.family
 

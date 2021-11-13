@@ -14,11 +14,12 @@ RSpec.describe 'Chore Lists', type: :request do
   end
 
   describe 'for logged-in users' do
-    let(:user) { create(:user, family: family) }
+    let(:owner) { create(:user, family: family) }
+    let(:viewer) { create(:user, family: family, role: 'viewer') }
     let(:family) { create(:family) }
 
     it 'should be able to list their chore lists' do
-      sign_in user
+      sign_in owner
       get chore_lists_path
       expect(response).to have_http_status(200)
     end
@@ -26,9 +27,9 @@ RSpec.describe 'Chore Lists', type: :request do
     context "accessing their family's own chore lists" do
       let(:chore_list) { create(:chore_list, family: family) }
 
-      it 'can see their lists' do
+      it 'can see their lists as owner' do
         chore_list
-        sign_in user
+        sign_in owner
 
         get chore_lists_path
 
@@ -36,13 +37,23 @@ RSpec.describe 'Chore Lists', type: :request do
         expect(response.body).to include('/chore_lists/1')
       end
 
-      it 'can get a list' do
+      it 'can see their lists as viewer' do
+        chore_list
+        sign_in viewer
+
+        get chore_lists_path
+
+        expect(response).to have_http_status(200)
+        expect(response.body).to include('/chore_lists/1')
+      end
+
+      it 'can get a list as owner' do
         # add a chore to the list to give us something to check for
         create(:chore,
           chore_list: chore_list, name: 'Stay out of the well', assigned_to: 'Timmy', is_done: false
         )
 
-        sign_in user
+        sign_in viewer
 
         get chore_list_path(id: chore_list.id)
 
@@ -51,11 +62,28 @@ RSpec.describe 'Chore Lists', type: :request do
         expect(response.body).to include('Timmy')
       end
 
-      it 'can create a list for a given date' do
-        chore_list_params = { chore_list: { date: '1954-09-12' } }
-        sign_in user
+      it 'can get a list as viewer' do
+        # add a chore to the list to give us something to check for
+        create(:chore,
+          chore_list: chore_list, name: 'Stay out of the well', assigned_to: 'Timmy', is_done: false
+        )
 
-        post chore_lists_path(chore_list_params)
+        sign_in viewer
+
+        get chore_list_path(id: chore_list.id)
+
+        expect(response).to have_http_status(200)
+        expect(response.body).to include('Stay out of the well')
+        expect(response.body).to include('Timmy')
+      end
+
+      it 'can create a list for a given date as owner' do
+        chore_list_params = { chore_list: { date: '1954-09-12' } }
+        sign_in owner
+
+        expect {
+          post chore_lists_path(chore_list_params)
+        }.to change(ChoreList, :count).by(1)
 
         expect(response).to have_http_status(302)
         created_list = ChoreList.last
@@ -63,7 +91,18 @@ RSpec.describe 'Chore Lists', type: :request do
         expect(created_list.date).to eq(Date.new(1954, 9, 12))
       end
 
-      it 'can carryover a list' do
+      it 'cannot create a list for a given date as viewer' do
+        chore_list_params = { chore_list: { date: '1954-09-12' } }
+        sign_in viewer
+
+        expect {
+          post chore_lists_path(chore_list_params)
+        }.to_not change(ChoreList, :count)
+
+        expect(response).to have_http_status(403)
+      end
+
+      it 'can carryover a list as owner' do
         incomplete_chore = create(:chore,
           chore_list: chore_list, name: 'Stay out of the well', assigned_to: 'Timmy', is_done: false
         )
@@ -71,9 +110,11 @@ RSpec.describe 'Chore Lists', type: :request do
           chore_list: chore_list, name: 'Rescue Timmy', assigned_to: 'Lassie', is_done: true
         )
 
-        sign_in user
+        sign_in owner
 
-        post carryover_chore_list_path(id: chore_list.id)
+        expect {
+          post carryover_chore_list_path(id: chore_list.id)
+        }.to change(ChoreList, :count).by(1)
 
         expect(response).to have_http_status(302)
 
@@ -88,12 +129,30 @@ RSpec.describe 'Chore Lists', type: :request do
         )
       end
 
+      it 'cannot carryover a list as viewer' do
+        incomplete_chore = create(:chore,
+          chore_list: chore_list, name: 'Stay out of the well', assigned_to: 'Timmy', is_done: false
+        )
+        complete_chore = create(:chore,
+          chore_list: chore_list, name: 'Rescue Timmy', assigned_to: 'Lassie', is_done: true
+        )
+
+        sign_in viewer
+
+        expect {
+          post carryover_chore_list_path(id: chore_list.id)
+        }.to_not change(ChoreList, :count)
+
+        expect(response).to have_http_status(302)
+        expect(response).to redirect_to(chore_list_path(chore_list))
+      end
+
       it 'can get the list for today' do
         create(:chore,
           chore_list: chore_list, name: 'Try not getting eaten by wolves', assigned_to: 'Timmy', is_done: false
         )
 
-        sign_in user
+        sign_in owner
 
         get today_path
 
@@ -105,7 +164,7 @@ RSpec.describe 'Chore Lists', type: :request do
       it 'redirects to the list of chore lists if a list for today does not exist' do
         create(:chore_list, date: Date.new(2001, 1, 1), family: family)
 
-        sign_in user
+        sign_in owner
 
         get today_path
 
@@ -115,6 +174,7 @@ RSpec.describe 'Chore Lists', type: :request do
     end
 
     context "accessing another family's chore lists" do
+      let (:user) { create(:user, family: family)}
       let (:another_family) { create(:family) }
       let (:not_my_chore_list) { create(:chore_list, family: another_family) }
 

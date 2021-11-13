@@ -17,41 +17,79 @@ RSpec.describe 'Chores', type: :request do
   end
 
   describe 'logged-in users' do
-    context 'accessing their own chores' do
+    context "accessing their family's chores" do
       let(:family) { create(:family) }
-      let(:user) { create(:user, family: family) }
+      let(:owner) { create(:user, family: family, role: "owner") }
+      let(:viewer) { create(:user, family: family, role: "viewer") }
       let(:chore_list) { create(:chore_list, family: family) }
 
-      it 'can create a chore' do
-        chore_params = {
-          chore: {
-            name: 'Try not falling in a well', assigned_to: 'Timmy', is_done: false
+      context 'as owner' do
+        it 'can create a chore' do
+          chore_params = {
+            chore: {
+              name: 'Try not falling in a well', assigned_to: 'Timmy', is_done: false
+            }
           }
-        }
 
-        sign_in user
-        post chore_list_chores_path(chore_list_id: chore_list.id, params: chore_params)
+          sign_in owner
 
-        expect(response).to redirect_to(chore_list_path(chore_list))
+          expect {
+            post chore_list_chores_path(chore_list_id: chore_list.id, params: chore_params)
+          }.to change(Chore, :count).by(1)
+
+          expect(response).to redirect_to(chore_list_path(chore_list))
+        end
+
+        it 'can update whether a chore is done' do
+          chore = create(:chore, chore_list: chore_list)
+
+          sign_in owner
+          new_attributes = {
+            completed: { chore.id => true }
+          }
+          patch chore_list_chore_path(chore_list_id: chore_list.id, id: chore.id),
+                params: new_attributes
+
+          expect(response).to redirect_to(chore_list_path(chore_list))
+          updated = Chore.find(chore.id)
+          expect(updated.is_done).to be true
+        end
       end
 
-      it 'can update whether a chore is done' do
-        chore = create(:chore, chore_list: chore_list)
+      context 'as viewer' do
+        it 'cannot create a chore' do
+          chore_params = {
+            chore: {
+              name: 'Try not falling in a well', assigned_to: 'Timmy', is_done: false
+            }
+          }
 
-        sign_in user
-        new_attributes = {
-          completed: { chore.id => true }
-        }
-        patch chore_list_chore_path(chore_list_id: chore_list.id, id: chore.id),
-              params: new_attributes
+          sign_in viewer
+          expect {
+            post chore_list_chores_path(chore_list_id: chore_list.id, params: chore_params)
+          }.to_not change(Chore, :count)
 
-        expect(response).to redirect_to(chore_list_path(chore_list))
-        updated = Chore.find(chore.id)
-        expect(updated.is_done).to be true
+          expect(response).to redirect_to(chore_list_path(chore_list))
+        end
+
+        it 'can update whether a chore is done' do
+          chore = create(:chore, chore_list: chore_list)
+
+          sign_in viewer
+          new_attributes = {
+            completed: { chore.id => true }
+          }
+          patch chore_list_chore_path(chore_list_id: chore_list.id, id: chore.id),
+                params: new_attributes
+
+          expect(response).to redirect_to(chore_list_path(chore_list))
+          updated = Chore.find(chore.id)
+          expect(updated.is_done).to be true
+        end
       end
     end
 
-    context 'for chores that are not mine' do
+    context "accessing another family's chores" do
       let(:another_users_family) { create(:family) }
       let(:this_users_family) { create(:family) }
       let(:user) { create(:user, family: this_users_family) }

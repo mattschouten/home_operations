@@ -3,9 +3,10 @@ class ChoresController < ApplicationController
     @chore_list = ChoreList.find(params[:chore_list_id])
     return head(:forbidden) unless current_user&.family == @chore_list&.family
 
-    @chore = @chore_list.chores.create(chore_params)
-
-    session[:last_assigned_to] = @chore.assigned_to
+    if current_user.role_owner?
+      @chore = @chore_list.chores.create(chore_params)
+      session[:last_assigned_to] = @chore.assigned_to
+    end
 
     redirect_to chore_list_path(@chore_list)
   end

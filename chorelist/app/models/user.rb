@@ -5,4 +5,9 @@ class User < ApplicationRecord
          :recoverable, :rememberable, :validatable
 
   belongs_to :family, optional: true
+
+  enum role: {
+    owner: 'owner',
+    viewer: 'viewer'
+  }, _prefix: :role
 end

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_11_07_171332) do
+ActiveRecord::Schema.define(version: 2021_11_13_142523) do
 
   create_table "chore_lists", force: :cascade do |t|
     t.date "date"
@@ -45,9 +45,11 @@ ActiveRecord::Schema.define(version: 2021_11_07_171332) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.integer "family_id"
+    t.string "role", default: "owner", null: false
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["family_id"], name: "index_users_on_family_id"
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
+    t.check_constraint "role in ('owner', 'viewer')", name: "role_check"
   end
 
   add_foreign_key "chore_lists", "families"
