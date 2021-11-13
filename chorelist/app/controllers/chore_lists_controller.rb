@@ -3,10 +3,13 @@ class ChoreListsController < ApplicationController
 
   def index
     @chore_lists = ChoreList.all
+      .where(family: current_user.family)
   end
 
   def show
     @chore_list = ChoreList.find(params[:id])
+    return head(:forbidden) unless current_user&.family == @chore_list&.family
+
     @chores_by_person = chores_by_person
 
     if session.key? :last_assigned_to
@@ -20,7 +23,7 @@ class ChoreListsController < ApplicationController
   end
 
   def create
-    @chore_list = ChoreList.new(chore_list_params)
+    @chore_list = ChoreList.new(chore_list_params.merge({ family: current_user.family }))
 
     if @chore_list.save
       redirect_to @chore_list
@@ -31,6 +34,7 @@ class ChoreListsController < ApplicationController
 
   def carryover
     source_list = ChoreList.find(params[:id])
+    return head(:forbidden) unless current_user&.family == source_list&.family
 
     @chore_list = ChoreList.new_carry_over(source_list)
     if @chore_list.save
@@ -41,7 +45,7 @@ class ChoreListsController < ApplicationController
   end
 
   def today
-    @chore_list = ChoreList.find_by(date: Date.today)
+    @chore_list = ChoreList.find_by(date: Date.today, family: current_user.family)
 
     if @chore_list.nil?
       redirect_to chore_lists_path
