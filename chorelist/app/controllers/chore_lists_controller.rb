@@ -2,8 +2,7 @@ class ChoreListsController < ApplicationController
   before_action :authenticate_user!
 
   def index
-    @chore_lists = ChoreList.all
-      .where(family: current_user.family)
+    @chore_lists = current_user&.family&.chore_lists
   end
 
   def show
