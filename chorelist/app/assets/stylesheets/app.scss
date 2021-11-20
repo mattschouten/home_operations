@@ -1,0 +1,30 @@
+ header ul {
+    float: right;
+    padding: 0;
+    margin: 0;
+
+    li {
+        display: inline;
+        float: left;
+
+        a {
+            display: inline-block;
+            padding: 1em 1em;
+            background-color: lightgray;
+            text-align: center;
+            text-decoration: none;
+            color: black;
+
+        }
+
+        a:visited {
+            color: black;
+        }
+
+        border-right: 1px solid darkslategray;
+    }
+
+    li:last-child {
+        border-right: none;
+    }
+}

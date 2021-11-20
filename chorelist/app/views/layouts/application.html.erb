@@ -19,12 +19,19 @@
     <% end %>
 
     <% if current_user %>
+      <header>
+        <ul id="nav">
+          <li><%= link_to "Home", root_path %></li>
+          <li><%= link_to "Today", today_path %></li>
+          <li><%= link_to "Log Out #{current_user.email}", destroy_user_session_path, method: :delete %></li>
+        </ul>
+      </header>
       <div class="headerbar">
         Current User: <%= current_user.email %> (<%= link_to "Log Out", destroy_user_session_path, method: :delete %>)<br />
       </div>
+      </header>
       <%= yield %>
     <% else %>
-      NO CURRENT USER
       <%= yield %>
     <% end %>
   </body>
