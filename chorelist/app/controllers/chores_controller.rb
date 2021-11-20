@@ -20,7 +20,11 @@ class ChoresController < ApplicationController
     chore_is_done = params.key?('completed') && params['completed'].key?(@chore.id.to_s)
     @chore.update(is_done: chore_is_done)
 
-    redirect_to chore_list_path(@chore_list)
+    if previous_path
+      redirect_to previous_path
+    else
+      redirect_to chore_list_path(@chore_list)
+    end
   end
 
   private

@@ -54,6 +54,37 @@ RSpec.describe 'Chores', type: :request do
           updated = Chore.find(chore.id)
           expect(updated.is_done).to be true
         end
+
+        it 'redirects to the original URL if set' do
+          chore = create(:chore, chore_list: chore_list)
+
+          sign_in owner
+          new_attributes = {
+            completed: { chore.id => true }
+          }
+
+          get today_path
+          patch chore_list_chore_path(chore_list_id: chore_list.id, id: chore.id),
+                params: new_attributes
+
+          expect(response).to redirect_to(today_path)
+        end
+
+        it 'redirects to the chore list path if original URL is not set' do
+          chore = create(:chore, chore_list: chore_list)
+
+          sign_in owner
+          new_attributes = {
+            completed: { chore.id => true }
+          }
+
+
+          # DO NOT get today_path (or any other path) so the previous URL is not set in the session
+          patch chore_list_chore_path(chore_list_id: chore_list.id, id: chore.id),
+                params: new_attributes
+
+          expect(response).to redirect_to(chore_list_path(chore_list))
+        end
       end
 
       context 'as viewer' do
