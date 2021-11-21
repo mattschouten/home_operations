@@ -4,7 +4,7 @@
 
 .choreblock {
     border: 1px solid black;
-    background-color: lightcyan;
+    background-color: lemonchiffon;
 
     .blocktitle {
         font-weight: bold;
@@ -17,6 +17,10 @@
     input[type=checkbox]:checked  + label {
         text-decoration: line-through;
     }
+}
+
+.choreblock.completed {
+    background-color: lightcyan;
 }
 
 @media print {

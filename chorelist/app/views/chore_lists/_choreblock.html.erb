@@ -1,4 +1,6 @@
-<div class="choreblock">
+<div class="choreblock<%=
+    chores_by_person[assigned_to].all? { |c| c.is_done } ? ' completed' : ''
+    %>">
     <p class="blocktitle"><%= assigned_to %>
         <ul>
         <% chores_by_person[assigned_to].each do |chore| %>
