@@ -48,7 +48,8 @@ class ChoreListsController < ApplicationController
   end
 
   def today
-    @chore_list = ChoreList.find_by(date: Date.today, family: current_user.family)
+    today_in_zone = Time.current.in_time_zone('America/Chicago').to_date
+    @chore_list = ChoreList.find_by(date: today_in_zone, family: current_user.family)
 
     if @chore_list.nil?
       redirect_to chore_lists_path

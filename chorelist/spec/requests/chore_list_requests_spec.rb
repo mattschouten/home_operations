@@ -1,6 +1,8 @@
 require 'rails_helper'
 
 RSpec.describe 'Chore Lists', type: :request do
+  include ActiveSupport::Testing::TimeHelpers
+
   describe 'for logged-out users' do
     it 'should be redirected to login when they try to list chore lists' do
       get chore_lists_path
@@ -155,6 +157,28 @@ RSpec.describe 'Chore Lists', type: :request do
         sign_in owner
 
         get today_path
+
+        expect(response).to have_http_status(200)
+        expect(response.body).to include('Try not getting eaten by wolves')
+        expect(response.body).to include('Timmy')
+      end
+
+      it 'uses US Central time for the today list for now' do
+        # The chore list's date is "today"
+        # The server time (UTC time zone) is tomorrow
+        # But the client time zone is Central, and it's still "today"
+
+        create(:chore,
+          chore_list: chore_list, name: 'Try not getting eaten by wolves', assigned_to: 'Timmy', is_done: false
+        )
+
+        server_time = DateTime.tomorrow.in_time_zone('UTC').change(hour: 2) # 2AM UTC = 3-4 hours before midnight Central
+        travel_to server_time
+
+        sign_in owner
+        get today_path
+
+        travel_back
 
         expect(response).to have_http_status(200)
         expect(response.body).to include('Try not getting eaten by wolves')
