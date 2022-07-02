@@ -23,6 +23,9 @@
         <ul id="nav">
           <li><%= link_to "Home", root_path %></li>
           <li><%= link_to "Today", today_path %></li>
+          <% if current_user.role_owner? %>
+            <li><%= link_to "Everyday Chores", everyday_chores_path %></li>
+          <% end %>
           <li><%= link_to "Log Out #{current_user.email}", destroy_user_session_path, method: :delete %></li>
         </ul>
       </header>

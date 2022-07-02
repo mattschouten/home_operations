@@ -16,6 +16,19 @@ class ChoreList < ApplicationRecord
       )
     end
 
+    new_list.add_everyday_chores(source_list.family)
+
     new_list
+  end
+
+  def add_everyday_chores(family)
+    family.everyday_chores.each do |edc|
+      Chore.create!(
+        name: edc.name,
+        assigned_to: edc.assigned_to,
+        chore_list: self,
+        is_done: false
+      )
+    end
   end
 end

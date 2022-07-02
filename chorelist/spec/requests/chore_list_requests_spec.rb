@@ -93,6 +93,25 @@ RSpec.describe 'Chore Lists', type: :request do
         expect(created_list.date).to eq(Date.new(1954, 9, 12))
       end
 
+      it 'includes everyday chores when creating the chore list' do
+        create(:everyday_chore, name: 'Feed the dog', assigned_to: 'Timmy', family: family)
+
+        chore_list_params = { chore_list: { date: '1954-09-12' } }
+        sign_in owner
+
+        expect {
+          post chore_lists_path(chore_list_params)
+        }.to change(ChoreList, :count).by(1)
+
+        expect(response).to have_http_status(302)
+        created_list = ChoreList.last
+
+        expect(created_list.chores.size).to eq(1)
+        only_chore = created_list.chores.first
+        expect(only_chore.name).to eq('Feed the dog')
+        expect(only_chore.assigned_to).to eq('Timmy')
+      end
+
       it 'cannot create a list for a given date as viewer' do
         chore_list_params = { chore_list: { date: '1954-09-12' } }
         sign_in viewer
@@ -128,6 +147,35 @@ RSpec.describe 'Chore Lists', type: :request do
           name: "*#{incomplete_chore.name}",
           assigned_to: incomplete_chore.assigned_to,
           is_done: incomplete_chore.is_done
+        )
+      end
+
+      it 'includes everyday chores when carrying over a chore list' do
+        incomplete_chore = create(:chore,
+          chore_list: chore_list, name: 'Feed your dog already', assigned_to: 'Timmy', is_done: false
+        )
+        create(:everyday_chore, name: 'Feed yourself since Timmy probably will not', assigned_to: 'Lassie', family: family)
+
+        sign_in owner
+
+        expect {
+          post carryover_chore_list_path(id: chore_list.id)
+        }.to change(ChoreList, :count).by(1)
+
+        expect(response).to have_http_status(302)
+
+        carryover_chore_list = ChoreList.last
+        expect(carryover_chore_list.chores.size).to eq(2)
+        expect(carryover_chore_list.chores[0]).to have_attributes(
+          name: "*#{incomplete_chore.name}",
+          assigned_to: incomplete_chore.assigned_to,
+          is_done: false
+        )
+
+        expect(carryover_chore_list.chores[1]).to have_attributes(
+          name: "Feed yourself since Timmy probably will not",
+          assigned_to: 'Lassie',
+          is_done: false
         )
       end
 

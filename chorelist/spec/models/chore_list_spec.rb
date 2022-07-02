@@ -17,4 +17,5 @@ RSpec.describe ChoreList, type: :model do
 
     expect(chore_list).to be_valid
   end
+
 end

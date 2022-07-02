@@ -1,0 +1,2 @@
+module EverydayChoresHelper
+end

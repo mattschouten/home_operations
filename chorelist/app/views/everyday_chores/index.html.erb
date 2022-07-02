@@ -1,0 +1,13 @@
+<h1>Everyday Chores</h1>
+
+<%= link_to "New Everyday Chore", new_everyday_chore_path %>
+
+<ul>
+    <% @everyday_chores.each do |everyday_chore| %>
+        <li>
+            <%= link_to everyday_chore.name, everyday_chore %>
+            (<%= everyday_chore.assigned_to %>)
+            <%= link_to "Delete", everyday_chore, { method: 'delete', remote: true, data: { confirm: 'Are you sure?' } } %>
+        </li>
+    <% end %>
+</ul>

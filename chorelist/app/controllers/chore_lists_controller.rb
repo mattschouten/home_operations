@@ -27,6 +27,7 @@ class ChoreListsController < ApplicationController
     @chore_list = ChoreList.new(chore_list_params.merge({ family: current_user.family }))
 
     if @chore_list.save
+      @chore_list.add_everyday_chores(current_user.family)
       redirect_to @chore_list
     else
       render :new
