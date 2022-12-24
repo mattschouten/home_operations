@@ -3,7 +3,7 @@
 <%= link_to "New Chore List", new_chore_list_path %>
 
 <ul>
-    <% @chore_lists.reverse.each do |chore_list| %>
+    <% @chore_lists&.reverse&.each do |chore_list| %>
         <li><%= link_to chore_list.date, chore_list %></li>
     <% end %>
 </ul>
