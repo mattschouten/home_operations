@@ -3,7 +3,7 @@
 <%= link_to "New Everyday Chore", new_everyday_chore_path %>
 
 <ul>
-    <% @everyday_chores.each do |everyday_chore| %>
+    <% @everyday_chores&.each do |everyday_chore| %>
         <li>
             <%= link_to everyday_chore.name, everyday_chore %>
             (<%= everyday_chore.assigned_to %>)
