@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+  get 'errors/not_found'
+  get 'errors/internal_server_error'
   resources :families
   root "pages#index"
 
@@ -14,6 +16,9 @@ Rails.application.routes.draw do
   resources :everyday_chores
 
   devise_for :users, path: 'auth', path_names: { sign_in: 'login', sign_out: 'logout', registration: 'register' }
+
+  match "/404", to: "errors#not_found", via: :all
+  match "/500", to: "errors#internal_server_error", via: :all
 
   #delete '/sign_out', to: 'user_sessions#destroy', as: :sign_out
   #delete '/sign_in', to: 'user_sessions#new', as: :sign_in
